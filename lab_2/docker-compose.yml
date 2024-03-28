@@ -1,30 +1,46 @@
 version: '3.7'
 services:
-  arch:
-    tty: true
-    container_name: arch
+
+  users_api:
+    container_name: users_api
     build:
-      context: ./app
+      context: ./users_api
       dockerfile: Dockerfile
     ports:
       - 8080:8080
     networks:
       - arch-network
+    depends_on:
+      init:
+        condition: service_completed_successfully
 
-  db:
+  init:
+    container_name: init
+    build:
+      context: ./init
+      dockerfile: Dockerfile
+    networks:
+      - arch-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+
+
+  postgres:
     container_name: postgres
     image: postgres:15
     environment:
       - POSTGRES_USER=ismail
       - POSTGRES_PASSWORD=ismail
       - PGDATA=/data/postgres
-      - POSTGRES_DB=arch_db
+      - POSTGRES_DB=shop_db
     ports:
       - "5432:5432"
     restart: unless-stopped
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -d postgres" ]
-      interval: 30s
+      interval: 5s
       timeout: 10s
       retries: 5
     networks:

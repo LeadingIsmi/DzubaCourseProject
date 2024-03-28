@@ -1,8 +1,7 @@
 FROM python:3.12
 WORKDIR /messenger_app
 
-COPY ./requirements.txt /messenger_app/requirements.txt
-RUN pip install -r requirements.txt
+RUN pip install psycopg "fastapi[all]" pyjwt redis
 
 COPY . /messenger_app
 

@@ -1,4 +1,4 @@
-import psycopg2
+import psycopg
 import time
 
 
@@ -12,14 +12,14 @@ class PostgresConnector:
         self.port = '5432'
         while True:
             try:
-                self.conn = psycopg2.connect(dbname=self.db_name, user=self.user,
-                                             password=self.password, host=self.host, port=self.port)
+                self.conn = psycopg.connect(dbname=self.db_name, user=self.user,
+                                            password=self.password, host=self.host, port=self.port)
                 break
             except:
                 print("Can't connect to postgres")
                 time.sleep(5)
 
-    def get_cursor(self) -> psycopg2.extensions.cursor:
+    def get_cursor(self) -> psycopg.Cursor:
 
         self.cur = self.conn.cursor()
         return self.cur
